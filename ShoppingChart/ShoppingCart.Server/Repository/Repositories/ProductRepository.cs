@@ -9,7 +9,7 @@ namespace ShoppingCartAPI.Repository.Repositories
     {
        // private readonly ApplicationDbContext _db;
 
-        public ProductRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<Product> logger) : base(dbcontextfactory, logger)
+        public ProductRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<Product> logger) : base(dbcontextfactory, logger)
         {
          //   _db = db;
         }

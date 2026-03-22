@@ -5,13 +5,13 @@ using ShoppingCartAPI.Repository.Interface;
 
 namespace ShoppingCartAPI.Repository.Repositories
 {
-    public class ShoppingCartRepository : GDCTRepository<ShoppingCart>, IShoppingCartRepository
+    public class ShoppingCartRepository : GDCTRepository<Models.ShoppingCart>, IShoppingCartRepository
     {
-        public ShoppingCartRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<ShoppingCart> logger) : base(dbcontextfactory, logger)
+        public ShoppingCartRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<Models.ShoppingCart> logger) : base(dbcontextfactory, logger)
         {
         }
 
-        public async Task<ShoppingCart> CreateAsync(int customerId)
+        public async Task<Models.ShoppingCart> CreateAsync(int customerId)
         {
             using (var ctx = _dbcontextfactory.CreateDbContext())
             {
@@ -19,7 +19,7 @@ namespace ShoppingCartAPI.Repository.Repositories
                 if (customer == null)
                     throw new ArgumentException($"Customer with Id={customerId} not found.");
 
-                var cart = new ShoppingCart
+                var cart = new Models.ShoppingCart
                 {
                     CustomerId = customerId,
                     Status = 1,
@@ -32,7 +32,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             }
         }
 
-        public new async Task<ShoppingCart?> GetByIdAsync(int id)
+        public new async Task<Models.ShoppingCart?> GetByIdAsync(int id)
         {
             using (var ctx = _dbcontextfactory.CreateDbContext())
             {
@@ -44,7 +44,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             }
         }
 
-        public new async Task<IEnumerable<ShoppingCart>> GetAllAsync()
+        public new async Task<IEnumerable<Models.ShoppingCart>> GetAllAsync()
         {
             using (var ctx = _dbcontextfactory.CreateDbContext())
             {

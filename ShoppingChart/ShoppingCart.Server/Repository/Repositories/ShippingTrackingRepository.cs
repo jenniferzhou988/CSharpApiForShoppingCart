@@ -7,7 +7,7 @@ namespace ShoppingCartAPI.Repository.Repositories
 {
     public class ShippingTrackingRepository : GDCTRepository<ShippingTracking>, IShippingTrackingRepository
     {
-        public ShippingTrackingRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<ShippingTracking> logger) : base(dbcontextfactory, logger)
+        public ShippingTrackingRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<ShippingTracking> logger) : base(dbcontextfactory, logger)
         {
         }
 

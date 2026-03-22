@@ -1,15 +1,17 @@
+export interface RegisterRequest {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fullName?: string;
+  orgId: number;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  fullName?: string;
-  firstName: string;
-  lastName: string;
-  orgId?: number;
 }
 
 export interface AuthResponse {

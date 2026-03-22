@@ -11,12 +11,12 @@
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" placeholder="you@example.com">
           <mat-icon matPrefix>email</mat-icon>
-          @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
-          <mat-error>Email is required</mat-error>
-          }
-          @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
-          <mat-error>Enter a valid email</mat-error>
-          }
+          <div *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">
+            <mat-error>Email is required</mat-error>
+          </div>
+          <div *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched">
+            <mat-error>Enter a valid email</mat-error>
+          </div>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -29,23 +29,26 @@
                   (click)="hidePassword = !hidePassword">
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-          <mat-error>Password is required</mat-error>
-          }
-          @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
-          <mat-error>Minimum 8 characters</mat-error>
-          }
+          <div *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+            <mat-error>Password is required</mat-error>
+          </div>
+          <div *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched">
+            <mat-error>Minimum 8 characters</mat-error>
+          </div>
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit"
                 class="full-width login-btn"
                 [disabled]="loginForm.invalid || loading">
-          @if (loading) {
-          <mat-spinner diameter="20"></mat-spinner>
-          } @else {
-          Sign In
-          }
+          <ng-container *ngIf="loading; else loadedContent">
+            <mat-spinner diameter="20"></mat-spinner>
+          </ng-container>
+          <ng-template #loadedContent>Sign In</ng-template>
         </button>
+
+        <p class="register-link">
+          Don't have an account? <a routerLink="/register">Register</a>
+        </p>
       </form>
     </mat-card-content>
   </mat-card>

@@ -17,7 +17,7 @@ namespace ShoppingCartAPI.Extensions
             // EF Core - demo
            // services.AddDbContext<GdctContext>(o => o.UseInMemoryDatabase("AuthDb"));
             // For SQL Server:
-            services.AddDbContext<GdctContext>(o => o.UseSqlServer(config.GetConnectionString("GDCTConnection")));
+            services.AddDbContext<ShoppingCartContext>(o => o.UseSqlServer(config.GetConnectionString("GDCTConnection")));
 
             services.Configure<JwtOptions>(config.GetSection("Jwt"));
             services.AddScoped<ITokenService, TokenService>();

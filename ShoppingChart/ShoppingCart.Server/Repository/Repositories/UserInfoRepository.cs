@@ -7,7 +7,7 @@ namespace ShoppingCartAPI.Repository.Repositories
 {
     public class UserInfoRepository : GDCTRepository<User>, IUserInfoRepository
     {
-        public UserInfoRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<User> logger) : base(dbcontextfactory,logger)
+        public UserInfoRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<User> logger) : base(dbcontextfactory,logger)
         {
         }
 

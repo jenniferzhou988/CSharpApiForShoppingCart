@@ -18,9 +18,12 @@ var builder = WebApplication.CreateBuilder(args);
 // 1) Configuration binding
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
-// 2) EF Core
-builder.Services.AddDbContext<GdctContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("GDCTConnection")));
+// 2) Encryption service (required by ShoppingCartContext)
+builder.Services.AddSingleton<IEncryptionService, AesEncryptionService>();
+
+// 3) EF Core — use AddDbContextFactory so IDbContextFactory<> is available for repositories
+builder.Services.AddDbContextFactory<ShoppingCartContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 3) AuthN: JWT Bearer
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -69,6 +72,7 @@ builder.Services.AddAuthorization();
 // 5) Utilities
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 //builder.Services.AddSingleton<JwtTokenService>();
+builder.Services.AddSingleton(typeof(IAppLogger<>), typeof(AppLogger<>));
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -182,92 +186,6 @@ app.MapFallbackToFile("/index.html");
 
 // Simple health check
 app.MapGet("/health", () => Results.Ok(new { ok = true }));
-
-
-
-// 7) Minimal API endpoints
-
-// Allow anonymous on auth endpoints
-/*
-var auth = app.MapGroup("/api/auth").AllowAnonymous();
-
-auth.MapPost("/register", async (RegisterRequest req, GdctContext db, IPasswordHasher<User> hasher) =>
-{
-    if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
-        return Results.BadRequest("Email and password are required.");
-
-    var exists = await db.Users.AnyAsync(u => u.Email == req.Email);
-    if (exists) return Results.Conflict("Email already registered.");
-
-    // need to modify the code and apply detail user information here
-    var user = new User
-    {
-        Email = req.Email.Trim().ToLowerInvariant(),
-        FullName = req.FullName,
-        FirstName=req.FirstName,
-        LastName=req.LastName,
-        Status=1,
-        OrgId=req.OrgId,
-        UserRoleId=1,
-       // UserRole = new UserRole { Id =1, RoleName= "Client User" }
-    };
-    user.PasswordHash = hasher.HashPassword(user, req.Password);
-
-    db.Users.Add(user);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/api/users/{user.Id}", new { user.Id, user.Email, user.FullName });
-});
-
-auth.MapPost("/login", async (LoginRequest req, GdctContext db, IPasswordHasher<User> hasher, JwtTokenService tokens) =>
-{
-    var user = await db.Users.AsNoTracking().Select(static o=>new User() { 
-        Id= o.Id,
-        Email = o.Email,
-        FullName = o.FullName,
-        FirstName = o.FirstName,
-        LastName=o.LastName,
-        PasswordHash=o.PasswordHash,
-        Status=1,
-        OrgId=o.OrgId,
-        UserRoleId=o.UserRoleId,
-        UserRole=o.UserRole,
-            })
-            .SingleOrDefaultAsync(u => 
-            u.Email == req.Email.Trim().ToLowerInvariant()
-            );
-
-    if (user is null)
-        return Results.Unauthorized();
-
-    var verify = hasher.VerifyHashedPassword(user, user.PasswordHash, req.Password);
-    if (verify == PasswordVerificationResult.Failed)
-        return Results.Unauthorized();
-
-    var (token, exp) = tokens.CreateAccessToken(user);
-    return Results.Ok(new AuthResponse(token, exp, user));
-});
-
-// Protected endpoints group
-var users = app.MapGroup("/api/users").RequireAuthorization();
-
-users.MapGet("/me", async (HttpContext http, GdctContext db) =>
-{
-    var userId = http.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
-              ?? http.User.FindFirst("NameId")?.Value;
-    if (string.IsNullOrEmpty(userId)) return Results.Unauthorized();
-
-    var id = int.Parse(userId);
-    var user = await db.Users.AsNoTracking().Where(u => u.Id == id)
-        .Select(u => new { u.Id, u.Email, u.FirstName, u.LastName, u.FullName, u.UserRole, u.Created })
-        .SingleOrDefaultAsync();
-
-    return user is null ? Results.NotFound() : Results.Ok(user);
-});
-*/
-//users.MapGet("/admin/ping", () => Results.Ok("pong (admin)"))
-//   .RequireAuthorization("AdminsOnly");
-
 
 app.Run();
 

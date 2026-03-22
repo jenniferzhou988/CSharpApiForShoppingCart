@@ -10,6 +10,11 @@ export const API_ENDPOINTS = {
     logout:     `${BASE}/Auth/logout`,
     logoutAll:  `${BASE}/Auth/logout-all`,
   },
+  productCategory: {
+    getAll:               `${BASE}/ProductCategory`,
+    getById:              (id: number) => `${BASE}/ProductCategory/${id}`,
+    getProductsByCategory:(id: number) => `${BASE}/ProductCategory/${id}/products`,
+  },
   product: {
     getAll:             `${BASE}/Product`,
     getById:            (id: number) => `${BASE}/Product/${id}`,

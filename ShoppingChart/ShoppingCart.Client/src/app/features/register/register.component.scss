@@ -1,0 +1,35 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 480px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.register-btn {
+  margin-top: 8px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+
+  a {
+    color: #1976d2;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -3,11 +3,15 @@
 }
 
 .app-sidenav {
-  width: 220px;
+  width: 240px;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.app-title {
+  margin-right: 16px;
 }
 
 .user-email {
@@ -18,4 +22,65 @@
 
 .app-content {
   padding: 0;
+}
+
+// Toolbar category dropdown button
+.category-menu-btn {
+  mat-icon:first-child {
+    margin-right: 4px;
+  }
+}
+
+// Sidenav section label
+.sidenav-section-label {
+  padding: 16px 16px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+// Category count in sidenav
+.cat-count {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+// Badge inside dropdown menu items
+.menu-badge {
+  margin-left: auto;
+  padding-left: 16px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+// Sidebar active state
+.active-sidebar {
+  background-color: #e8f0fe !important;
+  color: #1a73e8 !important;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+// Sidebar hover
+.sidebar .nav-link:hover {
+  background-color: #f1f3f5;
+  border-radius: 0.5rem;
+}
+
+// Navbar active link
+.navbar .nav-link.active {
+  color: #1a73e8 !important;
+  font-weight: 500;
+}
+
+// Dropdown items hover
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+// Tracking for section labels
+.tracking-wide {
+  letter-spacing: 0.05em;
 }
