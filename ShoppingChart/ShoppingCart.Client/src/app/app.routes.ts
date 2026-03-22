@@ -8,6 +8,16 @@ export const routes: Routes = [
       import('./features/login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'browse/all',
+    loadComponent: () =>
+      import('./features/products/product-list/product-list.component').then(m => m.ProductListComponent)
+  },
+  {
+    path: 'browse/:categoryId',
+    loadComponent: () =>
+      import('./features/products/product-browse/product-browse.component').then(m => m.ProductBrowseComponent)
+  },
+  {
     path: 'products',
     canActivate: [authGuard],
     children: [
@@ -28,6 +38,13 @@ export const routes: Routes = [
       }
     ]
   },
-  { path: '', redirectTo: '/products', pathMatch: 'full' },
-  { path: '**', redirectTo: '/products' }
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/register/register.component').then(
+        m => m.RegisterComponent
+      )
+  },
+  { path: '', redirectTo: '/browse/all', pathMatch: 'full' },
+  { path: '**', redirectTo: '/browse/all' }
 ];

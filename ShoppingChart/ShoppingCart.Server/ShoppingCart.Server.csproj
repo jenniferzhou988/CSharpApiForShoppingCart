@@ -9,7 +9,9 @@
     <SpaProxyServerUrl>https://localhost:53109</SpaProxyServerUrl>
     <UserSecretsId>26830b24-d393-4977-83ec-f169c50c6368</UserSecretsId>
   </PropertyGroup>
+  
 
+  
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="2.1.4" />
@@ -25,6 +27,10 @@
 		<PrivateAssets>all</PrivateAssets>
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.13">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
 	<!-- JWT bearer auth -->
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.12" />
 

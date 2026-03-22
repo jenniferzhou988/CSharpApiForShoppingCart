@@ -7,7 +7,7 @@ namespace ShoppingCartAPI.Repository.Repositories
 {
     public class AddressRepository : GDCTRepository<Address>, IAddressRepository
     {
-        public AddressRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<Address> logger) : base(dbcontextfactory, logger)
+        public AddressRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<Address> logger) : base(dbcontextfactory, logger)
         {
         }
 

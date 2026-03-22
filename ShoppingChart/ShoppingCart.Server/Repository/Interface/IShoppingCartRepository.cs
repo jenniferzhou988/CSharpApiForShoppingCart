@@ -2,11 +2,11 @@ using ShoppingCartAPI.Models;
 
 namespace ShoppingCartAPI.Repository.Interface
 {
-    public interface IShoppingCartRepository : IGDCTRepository<ShoppingCart>
+    public interface IShoppingCartRepository : IGDCTRepository<Models.ShoppingCart>
     {
-        Task<ShoppingCart> CreateAsync(int customerId);
-        Task<ShoppingCart?> GetByIdAsync(int id);
-        Task<IEnumerable<ShoppingCart>> GetAllAsync();
+        Task<Models.ShoppingCart> CreateAsync(int customerId);
+        Task<Models.ShoppingCart?> GetByIdAsync(int id);
+        Task<IEnumerable<Models.ShoppingCart>> GetAllAsync();
         Task<bool> DeleteAsync(int id);
         Task<ShoppingCartDetail?> AddItemAsync(int shoppingCartId, int productId, int quantity);
         Task<ShoppingCartDetail?> UpdateItemAsync(int shoppingCartId, int detailId, int quantity);

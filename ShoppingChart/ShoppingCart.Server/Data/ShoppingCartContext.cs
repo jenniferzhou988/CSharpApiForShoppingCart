@@ -4,11 +4,11 @@ using ShoppingCartAPI.Services;
 
 namespace ShoppingCartAPI.Data;
 
-public partial class GdctContext : DbContext
+public partial class ShoppingCartContext : DbContext
 {
     private readonly EncryptedConverter _encryptedConverter;
 
-    public GdctContext(DbContextOptions<GdctContext> options, IEncryptionService encryptionService)
+    public ShoppingCartContext(DbContextOptions<ShoppingCartContext> options, IEncryptionService encryptionService)
         : base(options)
     {
         _encryptedConverter = new EncryptedConverter(encryptionService);
@@ -32,7 +32,7 @@ public partial class GdctContext : DbContext
     public virtual DbSet<BillingMethod> BillingMethods { get; set; } = null!;
         public virtual DbSet<BankCardInfo> BankCardInfos { get; set; } = null!;
     public virtual DbSet<CustomerBillingCardLink> CustomerBillingCardLinks { get; set; } = null!;
-    public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; } = null!;
+    public virtual DbSet<ShoppingCartAPI.Models.ShoppingCart> ShoppingCarts { get; set; } = null!;
     public virtual DbSet<ShoppingCartDetail> ShoppingCartDetails { get; set; } = null!;
     public virtual DbSet<ProductImportRecord> ProductImportRecords { get; set; } = null!;
     public virtual DbSet<ProductInventory> ProductInventories { get; set; } = null!;
@@ -403,7 +403,7 @@ public partial class GdctContext : DbContext
                    .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<ShoppingCart>(entity => {
+        modelBuilder.Entity<Models.ShoppingCart>(entity => {
             entity.ToTable("ShoppingCart");
             entity.HasKey(s => s.Id);
             entity.Property(s => s.Id).ValueGeneratedOnAdd();

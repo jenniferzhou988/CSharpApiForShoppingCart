@@ -25,9 +25,9 @@ namespace ShoppingCartAPI.Repository.Repositories
     public class GDCTRepository<T> : IGDCTRepository<T> where T : GDCTEntityBase<int>
     {
         protected readonly IAppLogger<T> _logger;
-        protected readonly IDbContextFactory<GdctContext> _dbcontextfactory;
+        protected readonly IDbContextFactory<ShoppingCartContext> _dbcontextfactory;
 
-        public GDCTRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<T> logger)
+        public GDCTRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<T> logger)
         {
             _dbcontextfactory = dbcontextfactory;
             _logger = logger;
@@ -38,7 +38,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             IEnumerable<T> result = Enumerable.Empty<T>();
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     result =  await ctx.Set<T>()
                         .Skip((pageNumber - 1) * pageSize)
@@ -58,7 +58,7 @@ namespace ShoppingCartAPI.Repository.Repositories
         {
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     ctx.Set<T>().Add(entity);
                     Task.Run(() => ctx.SaveChangesAsync()).GetAwaiter().GetResult();
@@ -92,7 +92,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             try
             {
                 entity.Status = 0;
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     Task.Run(() => SaveAuditLog(entity, ctx, "ogSteps.BeforeUpdate")).GetAwaiter().GetResult();
 
@@ -115,7 +115,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             List<T> result = new List<T>(); 
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     result = await ctx.Set<T>().ToListAsync();
                 }
@@ -135,7 +135,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             List<T> result = new List<T>();
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     result =  await ctx.Set<T>().Where(predicate).ToListAsync();
                 }
@@ -154,7 +154,7 @@ namespace ShoppingCartAPI.Repository.Repositories
             T result = default(T);
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     result =  await ctx.Set<T>().FindAsync(id);
                 }
@@ -172,7 +172,7 @@ namespace ShoppingCartAPI.Repository.Repositories
         {
             try
             {
-                using (GdctContext ctx = _dbcontextfactory.CreateDbContext())
+                using (ShoppingCartContext ctx = _dbcontextfactory.CreateDbContext())
                 {
                     Task.Run(() => SaveAuditLog(entity, ctx, "LogSteps.BeforeUpdate")).GetAwaiter().GetResult();
                     ctx.Entry(entity).State = EntityState.Modified;
@@ -201,7 +201,7 @@ namespace ShoppingCartAPI.Repository.Repositories
          *         : 2025-02-18 replace hard code with Constant - Jet 
          *         : 2025-03-14 Add logic for key as ID - Jet 
          ***************************************************************/
-        private async Task SaveAuditLog(T entity, GdctContext gdct,string logStep)
+        private async Task SaveAuditLog(T entity, ShoppingCartContext gdct,string logStep)
         {
             try
             {
@@ -263,7 +263,7 @@ namespace ShoppingCartAPI.Repository.Repositories
          *         : 2025-03-14 Fix the Ambiguous match issue - Jet 
          *         : 2025-06-02 Add check null and try catch - Jet 
          ***************************************************************/
-        private async Task<long> GetPrimayKeyValue(T entity, GdctContext gdct)
+        private async Task<long> GetPrimayKeyValue(T entity, ShoppingCartContext gdct)
         {
             long result = 0;
             try

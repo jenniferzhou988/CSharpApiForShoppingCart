@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "ShoppingCart.Client\\ShoppingCart.Client.esproj",
+        "Action": "Start",
+        "DebugTarget": "Launch Chrome"
+      },
+      {
+        "Path": "ShoppingCart.Server\\ShoppingCart.Server.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
+      }
+    ]
+  }
+]

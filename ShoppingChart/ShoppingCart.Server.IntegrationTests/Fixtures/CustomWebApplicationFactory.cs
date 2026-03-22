@@ -20,10 +20,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             // Remove all EF Core / DbContext registrations
             var descriptorsToRemove = services
                 .Where(d =>
-                    d.ServiceType == typeof(DbContextOptions<GdctContext>) ||
+                    d.ServiceType == typeof(DbContextOptions<ShoppingCartContext>) ||
                     d.ServiceType == typeof(DbContextOptions) ||
-                    d.ServiceType == typeof(GdctContext) ||
-                    d.ServiceType == typeof(IDbContextFactory<GdctContext>))
+                    d.ServiceType == typeof(ShoppingCartContext) ||
+                    d.ServiceType == typeof(IDbContextFactory<ShoppingCartContext>))
                 .ToList();
 
             foreach (var descriptor in descriptorsToRemove)
@@ -46,13 +46,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.AddSingleton(typeof(IAppLogger<>), typeof(NullAppLogger<>));
 
             // Add in-memory database
-            services.AddDbContext<GdctContext>((sp, options) =>
+            services.AddDbContext<ShoppingCartContext>((sp, options) =>
             {
                 options.UseInMemoryDatabase(_dbName);
             });
 
             // Register IDbContextFactory (required by ShoppingCartRepository)
-            services.AddDbContextFactory<GdctContext>((sp, options) =>
+            services.AddDbContextFactory<ShoppingCartContext>((sp, options) =>
             {
                 options.UseInMemoryDatabase(_dbName);
             }, ServiceLifetime.Scoped);

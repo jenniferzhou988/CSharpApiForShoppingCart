@@ -7,7 +7,7 @@ namespace ShoppingCartAPI.Repository.Repositories
 {
     public class OrderRepository : GDCTRepository<Order>, IOrderRepository
     {
-        public OrderRepository(IDbContextFactory<GdctContext> dbcontextfactory, IAppLogger<Order> logger) : base(dbcontextfactory, logger)
+        public OrderRepository(IDbContextFactory<ShoppingCartContext> dbcontextfactory, IAppLogger<Order> logger) : base(dbcontextfactory, logger)
         {
         }
 

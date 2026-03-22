@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>LaunchJsonDebugger</DebuggerFlavor>
+    <LaunchJsonTarget>{
+  "name": "Launch Chrome",
+  "type": "chrome",
+  "request": "launch",
+  "url": "https://localhost:4200",
+  "webRoot": "D:\\Workspace-2026\\C Sharp\\CSharpApi\\ShoppingChart\\ShoppingCart.Client/src"
+}</LaunchJsonTarget>
+  </PropertyGroup>
+</Project>

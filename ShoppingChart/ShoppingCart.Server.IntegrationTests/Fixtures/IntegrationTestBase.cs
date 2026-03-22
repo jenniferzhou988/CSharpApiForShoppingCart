@@ -19,7 +19,7 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
     public async Task InitializeAsync()
     {
         using var scope = Factory.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<GdctContext>();
+        var db = scope.ServiceProvider.GetRequiredService<ShoppingCartContext>();
         await db.Database.EnsureCreatedAsync();
 
         // Seed a customer for cart creation tests

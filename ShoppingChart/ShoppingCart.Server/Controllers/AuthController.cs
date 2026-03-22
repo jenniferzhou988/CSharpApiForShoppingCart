@@ -16,13 +16,13 @@ namespace ShoppingCartAPI.Controllers
     public class AuthController : ControllerBase
     {
 
-        private readonly GdctContext _db;
+        private readonly ShoppingCartContext _db;
         private readonly ITokenService _tokens;
         private readonly IConfiguration _cfg;
 
         private const string RtCookie = "rt";
 
-        public AuthController(GdctContext db, ITokenService tokens, IConfiguration cfg)
+        public AuthController(ShoppingCartContext db, ITokenService tokens, IConfiguration cfg)
         {
             _db = db;
             _tokens = tokens;
@@ -52,24 +52,26 @@ namespace ShoppingCartAPI.Controllers
         [EnableRateLimiting("auth")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest req, CancellationToken ct)
         {
-
-
             if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
                 return BadRequest("Email and password are required.");
 
+            if (req.Password != req.ConfirmPassword)
+                return BadRequest("Passwords do not match.");
+
             var exists = await _db.Users.AnyAsync(u => u.Email == req.Email, ct);
             if (exists) return Conflict("Email already registered.");
-
-
 
             // need to modify the code and apply detail user information here
             var user = new User
             {
                 Email = req.Email.Trim().ToLowerInvariant(),
-                FullName = req.FullName,
+                UserName = req.Email.Trim().ToLowerInvariant(),
+                FullName = $"{req.FirstName} {req.LastName}".Trim(),
                 FirstName = req.FirstName,
                 LastName = req.LastName,
                 Status = 1,
+                Created = DateTime.UtcNow,
+                CreatedBy = "System"
             };
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password, workFactor: 12);
@@ -90,17 +92,42 @@ namespace ShoppingCartAPI.Controllers
                     CreatedBy = "System"
                 };
                 _db.UserRoles.Add(userRoleLink);
-                await _db.SaveChangesAsync(ct);
             }
 
-            var (access, refresh,expiry) = await _tokens.IssueTokenPairAsync(user, ct);
+            // Create a Customer record linked to the User
+            var customer = new Customer
+            {
+                FirstName = req.FirstName,
+                MiddleName = req.MiddleName,
+                LastName = req.LastName,
+                Email = req.Email.Trim().ToLowerInvariant(),
+                Status = 1,
+                Created = DateTime.UtcNow,
+                CreatedBy = "System"
+            };
+            _db.Customers.Add(customer);
+            await _db.SaveChangesAsync(ct);
+
+            // Link User to Customer
+            var userCustomerLink = new UserCustomerLink
+            {
+                UserId = user.Id,
+                CustomerId = customer.Id,
+                Status = 1,
+                Created = DateTime.UtcNow,
+                CreatedBy = "System"
+            };
+            _db.UserCustomerLinks.Add(userCustomerLink);
+            await _db.SaveChangesAsync(ct);
+
+            var (access, refresh, expiry) = await _tokens.IssueTokenPairAsync(user, ct);
             if (_cfg.GetValue<bool>("UseCookiesForRefreshToken"))
             {
                 var ttlDays = _cfg.GetValue<int>("Jwt:RefreshTokenDays");
                 SetRefreshCookie(refresh, ttlDays);
             }
 
-            return CreatedAtAction(nameof(Register), new AuthResponse(user.Id, user.Email, access,refresh,expiry));
+            return CreatedAtAction(nameof(Register), new AuthResponse(user.Id, user.Email, access, refresh, expiry));
         }
 
         [HttpPost("login")]

@@ -1,94 +1,76 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { AuthResponse, AuthState, LoginRequest } from '../models/auth.model';
+import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private authState$ = new BehaviorSubject<AuthState | null>(this.loadState());
+  private isBrowser: boolean;
+  private accessToken$ = new BehaviorSubject<string | null>(null);
 
-  /** Observable stream of the current auth state. */
-  readonly currentUser$ = this.authState$.asObservable();
-
-  constructor(private http: HttpClient) {}
-
-  get isLoggedIn(): boolean {
-    return !!this.authState$.value?.accessToken;
-  }
-
-  get currentUser(): AuthState | null {
-    return this.authState$.value;
-  }
-
-  get roles(): string[] {
-    return this.authState$.value?.roles ?? [];
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      this.accessToken$.next(localStorage.getItem('accessToken'));
+    }
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(API_ENDPOINTS.auth.login, request).pipe(
-      tap(response => this.saveState(response))
-    );
+    return this.http
+      .post<AuthResponse>(API_ENDPOINTS.auth.login, request)
+      .pipe(tap((res) => this.storeTokens(res)));
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(API_ENDPOINTS.auth.register, request)
+      .pipe(tap((res) => this.storeTokens(res)));
   }
 
   logout(): void {
-    const state = this.authState$.value;
-    if (state?.refreshToken) {
-      this.http.post(API_ENDPOINTS.auth.logout, { refreshToken: state.refreshToken }).subscribe();
+    if (this.isBrowser) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userId');
     }
-    this.clearState();
+    this.accessToken$.next(null);
   }
 
-  refreshToken(): Observable<AuthResponse> {
-    const refreshToken = this.authState$.value?.refreshToken;
-    return this.http.post<AuthResponse>(API_ENDPOINTS.auth.refresh, { refreshToken }).pipe(
-      tap(response => this.saveState(response))
-    );
+  getAccessToken(): string | null {
+    return this.accessToken$.value;
   }
 
-  private saveState(response: AuthResponse): void {
-    const roles = this.parseRolesFromJwt(response.accessToken);
-    const state: AuthState = {
-      userId: response.userId,
-      email: response.email,
-      accessToken: response.accessToken,
-      refreshToken: response.refreshToken,
-      expires: response.expires,
-      roles
-    };
-    localStorage.setItem(environment.tokenKey, response.accessToken);
-    localStorage.setItem(environment.refreshTokenKey, response.refreshToken);
-    localStorage.setItem('auth_state', JSON.stringify(state));
-    this.authState$.next(state);
+  isAuthenticated(): boolean {
+    return !!this.accessToken$.value;
   }
 
-  private loadState(): AuthState | null {
-    try {
-      const raw = localStorage.getItem('auth_state');
-      return raw ? JSON.parse(raw) as AuthState : null;
-    } catch {
+  private storeTokens(response: AuthResponse): void {
+    if (this.isBrowser) {
+      localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('userEmail', response.email);
+      localStorage.setItem('userId', response.userId.toString());
+      localStorage.setItem('refreshToken', response.refreshToken);
+    }
+    this.accessToken$.next(response.accessToken);
+  }
+
+  get currentUser(): { userId: number; email: string } | null {
+    if (!this.isBrowser) {
       return null;
     }
-  }
+    const token = localStorage.getItem('accessToken');
+    const email = localStorage.getItem('userEmail');
+    const userId = localStorage.getItem('userId');
 
-  private clearState(): void {
-    localStorage.removeItem(environment.tokenKey);
-    localStorage.removeItem(environment.refreshTokenKey);
-    localStorage.removeItem('auth_state');
-    this.authState$.next(null);
-  }
-
-  private parseRolesFromJwt(token: string): string[] {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const roleClaim =
-        payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??
-        payload['role'] ??
-        [];
-      return Array.isArray(roleClaim) ? roleClaim : [roleClaim];
-    } catch {
-      return [];
+    if (token && email && userId) {
+      return { userId: Number(userId), email };
     }
+    return null;
   }
 }

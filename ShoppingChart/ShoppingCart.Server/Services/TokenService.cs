@@ -28,10 +28,10 @@ namespace ShoppingCartAPI.Services
     public class TokenService : ITokenService
     {
 
-        private readonly GdctContext _db;
+        private readonly ShoppingCartContext _db;
         private readonly JwtOptions _opt;
 
-        public TokenService(GdctContext db, IOptions<JwtOptions> opt)
+        public TokenService(ShoppingCartContext db, IOptions<JwtOptions> opt)
         {
             _db = db;
             _opt = opt.Value;

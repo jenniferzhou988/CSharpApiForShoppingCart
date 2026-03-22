@@ -3,17 +3,36 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingCartAPI.Contracts
 {
-    public record RegisterRequest(
+    public class RegisterRequest
+    {
+        [Required, MaxLength(100)]
+        public string FirstName { get; init; }
+
+        [MaxLength(100)]
+        public string? MiddleName { get; init; }
+
+        [Required, MaxLength(100)]
+        public string LastName { get; init; }
+
         [Required, EmailAddress]
-        string Email, 
-         [Required, MinLength(8), MaxLength(128)]
-        string Password, string? FullName, string FirstName, string LastName, int OrgId);
+        public string Email { get; init; }
+
+        [Required, MinLength(8), MaxLength(128)]
+        public string Password { get; init; }
+
+        [Required, Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; init; }
+
+        public string? FullName { get; init; }
+
+        public int OrgId { get; init; }
+    }
+
     public record LoginRequest(
         [Required, EmailAddress]
         string Email,
         [Required, MinLength(8), MaxLength(128)]
         string Password);
-    //public record AuthResponse(string AccessToken, int ExpiresIn ,string TokenType, string? RefreshToken, DateTime Expires,User User);
 
     public record AuthResponse(
         int UserId,
@@ -26,6 +45,4 @@ namespace ShoppingCartAPI.Contracts
     public class AuthDtos
     {
     }
- 
-
 }

@@ -12,8 +12,8 @@ namespace ShoppingCartAPI.Controllers
     [Route("api/[controller]")]
     public class ProfileController: ControllerBase
     {
-        private readonly GdctContext _db;
-        public ProfileController(GdctContext db)
+        private readonly ShoppingCartContext _db;
+        public ProfileController(ShoppingCartContext db)
         {
             _db = db;
         }
