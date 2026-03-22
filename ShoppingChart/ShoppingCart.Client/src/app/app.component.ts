@@ -3,6 +3,10 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { CategoryService, CategoryWithCount } from './core/services/category.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+
 
 @Component({
   selector: 'app-root',
@@ -11,7 +15,8 @@ import { CategoryService, CategoryWithCount } from './core/services/category.ser
     CommonModule,
     RouterOutlet,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    MatToolbarModule, MatSidenavModule, MatListModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

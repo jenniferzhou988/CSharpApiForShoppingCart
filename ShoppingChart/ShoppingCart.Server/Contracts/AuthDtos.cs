@@ -25,7 +25,6 @@ namespace ShoppingCartAPI.Contracts
 
         public string? FullName { get; init; }
 
-        public int OrgId { get; init; }
     }
 
     public record LoginRequest(

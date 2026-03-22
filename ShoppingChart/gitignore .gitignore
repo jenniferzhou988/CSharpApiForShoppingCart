@@ -1,0 +1,73 @@
+# ==============================
+# .NET
+# ==============================
+
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# Visual Studio
+.vs/
+*.csproj.user
+*.dbmdl
+*.jfm
+launchSettings.json.user
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+TestResult.xml
+
+# User secrets
+secrets.json
+
+# ==============================
+# Angular / Node
+# ==============================
+node_modules/
+dist/
+tmp/
+out-tsc/
+.angular/
+
+# ==============================
+# AI / Tools
+# ==============================
+.claude/
+
+# ==============================
+# OS
+# ==============================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==============================
+# Misc
+# ==============================
+*.log
+npm-debug.log*

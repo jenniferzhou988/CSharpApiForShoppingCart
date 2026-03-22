@@ -10,7 +10,7 @@
       {
         "Path": "ShoppingCart.Server\\ShoppingCart.Server.csproj",
         "Action": "Start",
-        "DebugTarget": "IIS Express"
+        "DebugTarget": "https"
       }
     ]
   }

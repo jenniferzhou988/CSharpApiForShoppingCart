@@ -71,8 +71,16 @@ namespace ShoppingCartAPI.Controllers
                 LastName = req.LastName,
                 Status = 1,
                 Created = DateTime.UtcNow,
-                CreatedBy = "System"
+                CreatedBy = "System",
+                UserRoles = new List<UserRole>()
             };
+            user.UserRoles.Add(new UserRole
+            {
+                RoleId = 2, // Default to USER role
+                Status = 1,
+                Created = DateTime.UtcNow,
+                CreatedBy = "System"
+            });
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password, workFactor: 12);
 
